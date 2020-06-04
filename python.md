@@ -26,6 +26,7 @@ with pd.option_context('display.max_columns', None):
     display(df)
 ```
 
+
 * Show all rows in the dataframe `df`:
 ```python
 with pd.option_context('display.max_rows', None): 
