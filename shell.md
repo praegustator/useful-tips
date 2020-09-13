@@ -42,3 +42,7 @@ Switch active <-> inactive panels: `Ctrl + i`
 Switch active <-> inactive panels content: `Ctrl + u`
 
 Execute command / Open a directory: `Ctrl + j`
+
+## Right way to check DNS for a host in macOS
+
+`dscacheutil -q host -a name www.foobar.dev`
