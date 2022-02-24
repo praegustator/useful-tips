@@ -46,3 +46,12 @@ Execute command / Open a directory: `Ctrl + j`
 ## Right way to check DNS for a host in macOS
 
 `dscacheutil -q host -a name www.foobar.dev`
+
+## Save code repo to Word document
+
+```bash
+find . -type f > files.txt
+mkdir htmls
+n=0; while read line; do echo "<h3>$line<h3>" > htmls/$n.html; cat $line | ansi2html -t $line | tee -a htmls/$n.html; n=$((n+1)); done < files.txt
+cat htmls/* | pandoc -f html -t docx -o general.docx
+```
