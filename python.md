@@ -45,3 +45,32 @@ with pd.option_context('display.max_colwidth', -1,
 ```python
 print(json.dumps(data, indent=4, ensure_ascii=False))
 ```
+
+* Unfold lists to separate columns in the pandas dataframe:
+```python
+def unfold_columns(df, columns=[], strict=False):
+    assert isinstance(columns, list), "Columns should be a list of column names"
+    if len(columns) == 0:
+        columns = [
+            column for column in df.columns 
+            if df.applymap(lambda x: isinstance(x, list)).all()[column]
+        ]
+    else:
+        assert(all([(column in df.columns) for column in columns])), \
+            "Not all given columns are found in df"
+    columns_order = df.columns
+    for column_name in columns:
+        if df[column_name].apply(lambda x: isinstance(x, list)).all():
+            if strict:
+                assert len(set(df[column_name].apply(lambda x: len(x)))) == 1, \
+                    f"Lists in df['{column_name}'] are not of equal length"
+            unfolded = pd.DataFrame(df[column_name].tolist())
+            unfolded.columns = [f'{column_name}_{x}' for x in unfolded.columns] if (len(unfolded.columns) > 1) else [column_name]
+            columns_order = [
+                *columns_order[:list(columns_order).index(column_name)], 
+                *unfolded.columns, 
+                *columns_order[list(columns_order).index(column_name)+1:]
+            ]
+            df = df.drop([column_name], axis=1).join(unfolded)
+    return df[columns_order]
+```
