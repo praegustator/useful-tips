@@ -74,3 +74,15 @@ def unfold_columns(df, columns=[], strict=False):
             df = df.drop([column_name], axis=1).join(unfolded)
     return df[columns_order]
 ```
+
+## Python Environments
+
+* Find where global `site-packages` per user are located:
+```bash
+python -m site --user-site
+```
+
+* Find where `site-packages` are located in activated virtual environment:
+```bash
+python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"
+```
