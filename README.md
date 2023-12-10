@@ -6,3 +6,4 @@ Collection of small hacks to make my life easier.
 3. [nginx](nginx.md)
 4. [angular](angular.md)
 5. [routeros](routeros.md)
+6. [torrents](torrents.md)
