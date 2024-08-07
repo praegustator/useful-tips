@@ -75,6 +75,42 @@ def unfold_columns(df, columns=[], strict=False):
     return df[columns_order]
 ```
 
+* Show foldable JSON
+```python
+import uuid
+import json
+from IPython.display import display_javascript, display_html, display
+from bson import ObjectId
+
+class render_json(object):
+    def __init__(self, json_data):
+        self.uuid = str(uuid.uuid4())
+        self.json_str = self.serialize(json_data)
+       
+    def serialize(self, data):
+        """Convert data to JSON string, handling special types."""
+        def custom_serializer(obj):
+            if isinstance(obj, ObjectId):
+                return str(obj)
+            raise TypeError(f"Type {type(obj).__name__} not serializable")
+       
+        try:
+            if isinstance(data, dict) or isinstance(data, list):
+                return json.dumps(data, default=custom_serializer)
+            else:
+                raise ValueError("Input data must be a dictionary or list.")
+        except TypeError as e:
+            raise ValueError(f"Error serializing data: {e}")
+
+    def _ipython_display_(self):
+        display_html(f'<div id="{self.uuid}" style="height: 600px; width:100%;"></div>', raw=True)
+        display_javascript(f"""
+        require(["https://rawgit.com/caldwell/renderjson/master/renderjson.js"], function() {{
+          document.getElementById('{self.uuid}').appendChild(renderjson({self.json_str}))
+        }});
+        """, raw=True)
+```
+
 ## Python Environments
 
 * Find where global `site-packages` per user are located:
